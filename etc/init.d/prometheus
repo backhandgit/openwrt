@@ -5,7 +5,7 @@ STOP=01
 
 name=prometheus
 promDir=/opt/metrics/prometheus-2.25.2.linux-armv7
-dataDir=/tmp/${name}.data
+dataDir=/tmp/${name}
 pidFile=/var/run/${name}.pid
 
 start_service() {
@@ -13,7 +13,12 @@ start_service() {
     procd_set_param command ${promDir}/prometheus
     procd_append_param command --config.file="${promDir}/prometheus.yml"
     procd_append_param command --storage.tsdb.path="$dataDir"
+    procd_append_param command --storage.tsdb.retention="1h"
+    procd_append_param command --storage.tsdb.retention.size="10MB"
     procd_append_param command --storage.tsdb.retention.time="1h"
+    procd_append_param command --storage.tsdb.max-block-duration="1h"
+    procd_append_param command --storage.tsdb.min-block-duration="1h"
+    procd_append_param command --web.listen-address="192.168.1.1:9090"
     procd_set_param pidfile $pidFile
 
     procd_set_param stdout 1
@@ -28,3 +33,11 @@ start_service() {
 reload_service() {
     kill -1 `eval cat  $pidFile`
 }
+
+
+restart() {
+    stop "$@"                                
+    rm -rf $dataDir
+    start "$@"                                
+}
+

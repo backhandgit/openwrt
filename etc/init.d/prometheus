@@ -4,7 +4,7 @@ START=99
 STOP=01
 
 name=prometheus
-promDir=/opt/metrics/prometheus-2.25.2.linux-armv7
+promDir=/opt/metrics/prometheus
 dataDir=/tmp/${name}
 pidFile=/var/run/${name}.pid
 
@@ -12,12 +12,14 @@ start_service() {
     procd_open_instance
     procd_set_param command ${promDir}/prometheus
     procd_append_param command --config.file="${promDir}/prometheus.yml"
-    procd_append_param command --storage.tsdb.path="$dataDir"
-    procd_append_param command --storage.tsdb.retention="1h"
-    procd_append_param command --storage.tsdb.retention.size="10MB"
-    procd_append_param command --storage.tsdb.retention.time="1h"
-    procd_append_param command --storage.tsdb.max-block-duration="1h"
-    procd_append_param command --storage.tsdb.min-block-duration="1h"
+    procd_append_param command --enable-feature="agent"
+    procd_append_param command --storage.agent.path="$dataDir"
+#    procd_append_param command --storage.tsdb.path="$dataDir"
+#    procd_append_param command --storage.tsdb.retention="1h"
+#    procd_append_param command --storage.tsdb.retention.size="10MB"
+#    procd_append_param command --storage.tsdb.retention.time="1h"
+#    procd_append_param command --storage.tsdb.max-block-duration="1h"
+#    procd_append_param command --storage.tsdb.min-block-duration="1h"
     procd_append_param command --web.listen-address="192.168.1.1:9090"
     procd_set_param pidfile $pidFile
 

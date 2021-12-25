@@ -13,8 +13,10 @@ start_service() {
     procd_append_param command --collector.stat
     procd_append_param command --collector.uname
     procd_append_param command --collector.wifi
+    procd_append_param command --collector.textfile
+    procd_append_param command --collector.textfile.directory="/tmp/prometheus"
+    procd_append_param command --web.listen-address="192.168.1.1:9100"
 
-    procd_set_param nice 5
     procd_set_param respawn
     procd_set_param stdout 1
     procd_set_param stderr 1

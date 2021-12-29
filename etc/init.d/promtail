@@ -10,7 +10,7 @@ start_service() {
     procd_set_param command ${promtailDir}/promtail-linux-arm
     procd_append_param command -config.file="${promtailDir}/promtail.yaml"
 
-    procd_set_param nice 5
+    procd_set_param nice 15
     procd_set_param respawn
     procd_set_param stdout 1
     procd_set_param stderr 1

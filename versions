@@ -1,0 +1,12 @@
+#! /bin/sh
+
+promText=/tmp/prometheus/versions.prom
+
+rm -f $promText
+stat="node_openwrt_build_info"
+echo "# TYPE $stat gauge" >> $promText
+cat /etc/openwrt_release  | sed  -ne "s/DISTRIB_RELEASE='\([^']*\)'/$stat { version=\"\1\" } 1/p" >> $promText
+
+stat="promtail_build_info"
+echo "# TYPE $stat gauge" >> $promText
+/opt/metrics/promtail/promtail-linux-arm --version | sed -ne "s/promtail, version \(.*\) (.*/$stat { version=\"\1\" } 1/p" >> $promText

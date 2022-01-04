@@ -5,7 +5,7 @@ STOP=01
 
 name=prometheus
 promDir=/opt/metrics/prometheus
-dataDir=/tmp/${name}
+dataDir=/var/log/${name}
 pidFile=/var/run/${name}.pid
 
 start_service() {

@@ -3,7 +3,8 @@
 USE_PROCD=1
 
 # starts after network starts
-START=21
+# plus a little later so blocklists can load
+START=90
 # stops before networking stops
 STOP=89
 
@@ -11,7 +12,7 @@ STOP=89
 name="AdGuardHome"
 
 PROG=/opt/${name}/${name}
-WORK_DIR=/tmp/${name}
+WORK_DIR=/var/log/${name}
 
 cmd="${PROG} -w "${WORK_DIR}" -s run -c "${PROG}.yaml" "
 pid_file="/var/run/${name}.pid"
@@ -19,7 +20,7 @@ pid_file="/var/run/${name}.pid"
 start_service() {
     echo "Starting ${name}"
 
-  [ -d "$WORK_DIR" ] || mkdir -m 0755 -p "$WORK_DIR"
+    [ -d "$WORK_DIR" ] || mkdir -m 0755 -p "$WORK_DIR"
 
     procd_open_instance
     procd_set_param command ${cmd}
@@ -37,7 +38,7 @@ stop_service() {
 }
 
 EXTRA_COMMANDS="status"
-EXTRA_HELP="        status  Print the service status"
+EXTRA_HELP="status  Print the service status"
 
 get_pid() {
     cat "${pid_file}"

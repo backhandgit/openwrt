@@ -4,7 +4,7 @@ server:
   grpc_listen_port: 0
 
 positions:
-  filename: /tmp/promtail.positions.yaml
+  filename: /var/promtail.positions.yaml
 
 client:
   url: https://32954:eyJrIjoiOTYxNDEwMzVlMjJlOTc4YjcwMzgyMTkzMjY4ODRiNzA1ZjJlY2E3NyIsIm4iOiJwcm9tdGFpbCIsImlkIjo0NzY1NjB9@logs-prod-us-central1.grafana.net/api/prom/push
@@ -13,7 +13,7 @@ scrape_configs:
 - job_name: agh
   static_configs:
   - labels:
-      __path__: "/tmp/AdGuardHome/data/querylog.json"
+      __path__: "/var/log/AdGuardHome/data/querylog.json"
       log: "agh.testing12"
 
   pipeline_stages:

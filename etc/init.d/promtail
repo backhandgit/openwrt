@@ -3,14 +3,18 @@ USE_PROCD=1
 START=98
 STOP=01
 
-promtailDir=/opt/metrics/promtail
+name=promtail
+promtailDir=/opt/metrics/${name}
+pidFile=/var/run/${name}.pid
+
 
 start_service() {
     procd_open_instance
     procd_set_param command ${promtailDir}/promtail-linux-arm
-    procd_append_param command -config.file="${promtailDir}/promtail.yaml"
+    procd_append_param command -config.file="${promtailDir}/${name}.yaml"
 
     procd_set_param nice 15
+    procd_set_param pidfile $pidFile
     procd_set_param respawn
     procd_set_param stdout 1
     procd_set_param stderr 1

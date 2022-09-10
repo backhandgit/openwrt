@@ -1,5 +1,5 @@
 global:
-  scrape_interval:     1m
+  scrape_interval:     30s
   evaluation_interval: 15h
   # scrape_timeout is set to the global default (10s).
 
@@ -7,16 +7,15 @@ scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'prometheus'
     static_configs:
-    - targets: ['localhost:9090']
+    - targets: ['192.168.1.1:9090']
     relabel_configs:
     - source_labels: [__address__]
       regex: "([^:]+):\\d+"
       target_label: instance
     metric_relabel_configs:
     - source_labels: [__name__]
-      regex: go_memstats_.*|process_cpu_seconds_total|process_start_time_seconds|prometheus_build_info|prometheus_remote_storage_.*|prometheus_target_interval_length_seconds
+      regex: go_memstats_.*|process_cpu_seconds_total|process_start_time_seconds|prometheus_build_info|prometheus_.*_clean_start|prometheus_remote_storage_.*|prometheus_target_interval_length_seconds
       action: keep
-    scrape_interval: 15s
 
 #  - job_name: 'adguard'
 #    static_configs:
@@ -41,12 +40,11 @@ scrape_configs:
       regex: ".+([[:xdigit:]]):([[:xdigit:]][[:xdigit:]]):([[:xdigit:]][[:xdigit:]])" 
       target_label: mac_address
       replacement: "$1$2$3"
-    scrape_interval: 15m
 
   - job_name: 'node-lua'
     static_configs:
     - targets: ['192.168.1.1:9101']
-    - targets: ['192.168.1.127:9100']
+#    - targets: ['192.168.1.127:9100']
     relabel_configs:
     - source_labels: [__address__]
       regex: "([^:]+):\\d+"
@@ -59,7 +57,6 @@ scrape_configs:
       regex: ".+([[:xdigit:]]):([[:xdigit:]][[:xdigit:]]):([[:xdigit:]][[:xdigit:]])" 
       target_label: mac
       replacement: "$1$2$3"
-    scrape_interval: 10s
 
 remote_write:
 - url: https://prometheus-blocks-prod-us-central1.grafana.net/api/prom/push
